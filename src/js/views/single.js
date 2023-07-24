@@ -5,10 +5,48 @@ import { Context } from "../store/appContext";
 
 export const Single = props => {
 	const { store, actions } = useContext(Context);
-	const params = useParams();
+	const {theid} = useParams();
+
+	const [users, setUsers] = useState('');
+
+
+	useEffect(() => {
+		setUsers(JSON.parse(localStorage.getItem('tasks')))
+	}, []); 
+
+	
+
 	return (
 		<div className="jumbotron">
-			<h1 className="display-4">This will show the demo element: {store.demo[params.theid].title}</h1>
+			<h1 className="display-4">
+			
+			{!users ? ('NO') : (
+				
+				<div>
+					<ul>
+						
+						<li>
+						 <b>Name:</b> {users[theid].name}
+						</li>
+						<li>
+						<b>Username:</b> {users[theid].username}
+						</li>
+						<li>
+						<b>Email:</b> {users[theid].email}
+						</li>
+						<li>
+						<b>Address:</b> {users[theid].address.street + ", "} 
+						 {users[theid].address.suite + ", "} 
+						 {users[theid].address.city}  
+						</li>
+						
+
+
+					</ul>
+				</div>
+			
+				)}
+			</h1>
 
 			<hr className="my-4" />
 

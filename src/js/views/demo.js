@@ -8,17 +8,43 @@ import "../../styles/demo.css";
 export const Demo = () => {
 	const { store, actions } = useContext(Context);
 
+	const [tasks, setTasks] = useState([]);
+  	const host = "https://jsonplaceholder.typicode.com/";
+
+  	const fetchTasks = async () => {
+    const url = host + "users";
+    const request = {
+      method: "GET",
+    };
+
+    const response = await fetch(url, request);
+
+    if (response.ok) {
+      const data = await response.json();
+      setTasks(data);
+	  localStorage.setItem('tasks', JSON.stringify(data))
+    } else {
+      console.log("Error", response.status, response.statusText);
+    }
+  	};
+
+  useEffect(() => {
+    fetchTasks();
+  }, []);
+
+
+
 	return (
 		<div className="container">
 			<ul className="list-group">
-				{store.demo.map((item, index) => {
+				{tasks.map((item, index) => {
 					return (
 						<li
 							key={index}
 							className="list-group-item d-flex justify-content-between"
 							style={{ background: item.background }}>
 							<Link to={"/single/" + index}>
-								<span>Link to: {item.title}</span>
+								<span>{item.name}</span>
 							</Link>
 							{// Conditional render example
 							// Check to see if the background is orange, if so, display the message
@@ -27,9 +53,6 @@ export const Demo = () => {
 									Check store/flux.js scroll to the actions to see the code
 								</p>
 							) : null}
-							<button className="btn btn-success" onClick={() => actions.changeColor(index, "orange")}>
-								Change Color
-							</button>
 						</li>
 					);
 				})}
